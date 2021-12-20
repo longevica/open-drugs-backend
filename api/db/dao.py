@@ -1,19 +1,31 @@
-from mysql import connector
-
 from config import CONFIG
 from entities import entities
 
+import psycopg2
+
 
 class BaseDAO:
+    connection = None
+
     def __init__(self):
-        # Connect to server.
-        self.cnx = connector.connect(
-            host=CONFIG['DB_HOST'],
-            port=CONFIG['DB_PORT'],
-            user=CONFIG['DB_USER'],
-            password=CONFIG['DB_PASSWORD'],
-            database=CONFIG['DB_NAME'],
-        )
+        if self.connection is None:
+            # migrations
+            connstr = CONFIG['DB_CONN']
+            import subprocess
+            args = ["yoyo", "apply", "--database", connstr, "-b", "./db/migrations"]
+            subprocess.run(args)
+
+            # conn
+            self.connection = psycopg2.connect(connstr
+                # host=host, port=port, user=user, password=password, database=database,
+            )
+            cursor = self.connection.cursor()
+            cursor.execute("SELECT version();")
+            record = cursor.fetchone()
+            print("success connected - ", record, "\n")
+            cursor.close()
+        # cursor
+        self.cursor = self.connection.cursor()
 
 
 class ExperimentDAO(BaseDAO):
@@ -25,10 +37,7 @@ class ExperimentDAO(BaseDAO):
         cur.execute(request)
         return cur.fetchall()
 
-    def get(
-            self,
-            id: int = None,
-    ) -> entities.Experiment:
+    def get(self, id: int = None) -> entities.Experiment:
         cur = self.cnx.cursor(dictionary=True)
         cur.execute(
             "SELECT * FROM `experiment` WHERE id= %(id)s;",
@@ -37,10 +46,11 @@ class ExperimentDAO(BaseDAO):
         result = cur.fetchone()
         return result
 
-    def add(
-            self,
-            experiment: entities.Experiment,
-    ) -> entities.Experiment:
+    def add(self, experiment: entities.Experiment) -> entities.Experiment:
+        '''
+        :param experiment:
+        :return:
+        '''
         experiment_dict = experiment.dict(exclude_none=True)
 
         # It's OK to use f-strings, because of Pydantic validation.

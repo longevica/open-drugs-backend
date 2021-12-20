@@ -9,6 +9,7 @@ from pydantic import BaseModel
 
 from endpoints import experiment
 from config import CONFIG, VERSION
+from db.dao import BaseDAO
 
 
 def assembling_endpoints(app: FastAPI):
@@ -16,6 +17,7 @@ def assembling_endpoints(app: FastAPI):
         experiment.router,
         tags=["experiment"],
     )
+
 
 origins = [
     "*",
@@ -53,19 +55,22 @@ class Version(BaseModel):
     major: str
     minor: str
     build: Optional[str]
-    date:Optional[str]
-    revision:Optional[str]
-    branch:Optional[str]
+    date: Optional[str]
+    revision: Optional[str]
+    branch: Optional[str]
+
 
 @app.get("/version")
-def version()->dict:
+def version() -> dict:
     """
     Version information for the running application instance
     """
     return VERSION
 
+
 def custom_openapi():
-    if app.openapi_schema: return app.openapi_schema
+    if app.openapi_schema:
+        return app.openapi_schema
     openapi_schema = get_openapi(
         title=app.title,
         version=str(VERSION.get('major')) + '.' + str(VERSION.get('minor')) + '.' + str(VERSION.get('build')),
@@ -75,13 +80,17 @@ def custom_openapi():
     app.openapi_schema = openapi_schema
     return app.openapi_schema
 
+
 app.openapi = custom_openapi
 
 if __name__ == "__main__":
+    # db conn init
+    _ = BaseDAO()
+    # run
     uvicorn.run(
         "main:app",
         host=CONFIG['API_HOST'],
         port=int(CONFIG['API_PORT']),
         reload=CONFIG.get('RELOAD'),
-        debug=CONFIG.get('DEBUG'), # debug=True implies reload=True
+        debug=CONFIG.get('DEBUG'),  # debug=True implies reload=True
     )

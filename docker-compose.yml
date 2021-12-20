@@ -1,6 +1,21 @@
 version: '3'
 
 services:
+  postgres:
+    image: postgres
+    user: ${LISTCONTROLS_UID}
+    environment: # Set up postgres database name and password
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: open_drags
+      POSTGRES_USER: admin
+    ports: # Set up ports exposed for other containers to connect to
+      - 5433:5432
+    networks:
+      - postgres_net
+    volumes:
+      - ./../listcontrols-postgres:/var/lib/postgresql/data
+      - ./docker/postgres:/docker-entrypoint-initdb.d
+
   api:
     user: ${LISTCONTROLS_UID}
     build:
@@ -13,22 +28,10 @@ services:
       - "./api:/api"
       - "./.env:/.env"
       - "./requirements.txt:/requirements.txt"
-    network_mode: "host"
-
-  postgres:
-    image: postgres
-    user: ${LISTCONTROLS_UID}
-    environment: # Set up postgres database name and password
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: lisc
-      POSTGRES_USER: root
-    ports: # Set up ports exposed for other containers to connect to
-      - 5433:5432
+    depends_on:
+      - postgres
     networks:
       - postgres_net
-    volumes:
-      - ./../listcontrols-postgres:/var/lib/postgresql/data
-      - ./docker/postgres:/docker-entrypoint-initdb.d
 
 networks:
   postgres_net:
@@ -36,3 +39,4 @@ networks:
       name: postgres_net
   default:
     external: false
+
