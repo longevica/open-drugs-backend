@@ -28,7 +28,7 @@ make run
 ```
 make migrate_up
 ```
-- #### migrations up:
+- #### migrations down:
 ```
 make migrate_down
 ```

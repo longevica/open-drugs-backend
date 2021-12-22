@@ -3,7 +3,6 @@ __pypackages__
 .vscode
 .env
 .idea
-.pdm.toml
 *.log
 .DS_Store
 Thumbs.db

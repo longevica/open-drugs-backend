@@ -1,4 +1,4 @@
--- drags_interventions
+-- drugs_interventions
 
 CREATE SCHEMA interventions;
 ALTER SCHEMA interventions OWNER TO admin;
