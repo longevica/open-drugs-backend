@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres
+    user: ${LISTCONTROLS_UID}
+    environment: # Set up postgres database name and password
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: open_drugs
+      POSTGRES_USER: admin
+    ports: # Set up ports exposed for other containers to connect to
+      - 5433:5432
+    networks:
+      - postgres_net
+    volumes:
+      - ./../listcontrols-postgres:/var/lib/postgresql/data
+      - ./docker/postgres:/docker-entrypoint-initdb.d
+
+  api:
+    user: ${LISTCONTROLS_UID}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: listcontrols-backend-dev
+    hostname: listcontrols-api
+    container_name: listcontrols-api-dev
+    volumes:
+      - "./api:/api"
+      - "./.env:/.env"
+      - "./requirements.txt:/requirements.txt"
+    depends_on:
+      - postgres
+    networks:
+      - postgres_net
+
+networks:
+  postgres_net:
+    external:
+      name: postgres_net
+  default:
+    external: false
+
