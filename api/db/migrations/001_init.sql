@@ -188,7 +188,7 @@ CREATE UNIQUE INDEX uin_nutrition_name ON  nutrition(name);
 CREATE OR REPLACE FUNCTION get_nutrition_id(_name TEXT) RETURNS INTEGER AS
 $$
 DECLARE
-    row_id_ BIGINT;
+    row_id_ INTEGER;
 BEGIN
     SELECT id INTO row_id_ FROM nutrition a WHERE a.name = _name;
     IF NOT FOUND THEN
