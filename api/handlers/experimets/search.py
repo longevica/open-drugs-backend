@@ -71,13 +71,13 @@ def handler_get_exp_list(
                 }
             },
             {
-                "id": 123,
+                "id": 124,
                 "species": {
-                    "id": 123,
+                    "id": 124,
                     "name": "mus musculus"
                 },
                 "strain": {
-                    "id": 123,
+                    "id": 124,
                     "name": "UM-HET3"
                 },
                 "sex": "female",
