@@ -1,0 +1,49 @@
+0 # => ?
+    1  Substance => active_substance.name
+2  Genetic mutation =>
+3  Other genetic intervention =>
+    4  Organism(name) => species.name => exp.species_id
+    5  Organism(breed) => strain.name => exp.strain_id
+    6  Organism(sex) => sex.name => exp.sex_id
+    7  Sample Size(control) => control_group.size
+    8  Sample Size(experiment) => treatment_group.size
+9  Test Site => n/a
+10 Group => n/a
+11 Mean lifespan experiment(days) =>
+12 Mean lifespan experiment(%% change) =>
+13 Mean lifespan experiment(p-value) =>
+14 Median lifespan experiment(days) =>
+15 Median lifespan experiment(%% change) =>
+16 Median lifespan experiment(p-value) =>
+17 Maximal lifespan (90th percentile) experiment(days) =>
+18 Maximal lifespan (90th percentile) experiment(%% change) =>
+19 Maximal lifespan (90th percentile) experiment(p-value) =>
+20 Mean lifespan control =>
+21 Median  lifespan control =>
+22 Maximal lifespan (or 90th percentile) control =>
+23 variables (hours / days / months / ...) =>
+24 Way of substance delivery(Option (injection / diet / drink / medium)) =>
+25 Way of substance delivery(Mean (water solution / ethanol / DMSO / etc.)) =>
+26 Way of substance delivery(Regime (one-time / repeated, for repeated.: continuous / interval)) =>
+27 Way of substance delivery(Interval (optional)) =>
+28 Concentration(single) =>
+29 Concentration(daily) =>
+30 Concentration(summed up) =>
+31 The range of substance exposure (% of lifespan)(Start point of treatment) =>
+32 The range of substance exposure (% of lifespan)(Duration of treatment) =>
+33 The range of substance exposure (% of lifespan)(Starting age/end point) =>
+34 Conditions of animal maintenance(quantity of animals/cage) =>
+35 Conditions of animal maintenance(temperature) =>
+36 Conditions of animal maintenance(feed) =>
+37 Conditions of animal maintenance(other in control) =>
+38 Conditions of animal maintenance(other in experiment) =>
+    ---
+    39 Article(Source) => journal.name => publication.journal_id
+    40 Article(Impact factor) => none
+    41 Article(Year of publication) => publication.date
+    42 Article(DOI) => publication.doi
+    43 Article(PMID) => publication.pmid
+    ---> exp.publication_id
+    44 Reviewed => none
+    45 Comment => exp.comment
+46 % difference b/w M & F  in chage of lifespan (добавим?) =>

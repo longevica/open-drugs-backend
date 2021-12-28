@@ -7,3 +7,4 @@ __pypackages__
 .DS_Store
 Thumbs.db
 VERSION
+parsers/parser_gtable/tables

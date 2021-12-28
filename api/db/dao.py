@@ -16,9 +16,7 @@ class BaseDAO:
             subprocess.run(args)
 
             # conn
-            self.connection = psycopg2.connect(connstr
-                # host=host, port=port, user=user, password=password, database=database,
-            )
+            self.connection = psycopg2.connect(connstr)
             cursor = self.connection.cursor()
             cursor.execute("SELECT version();")
             record = cursor.fetchone()
