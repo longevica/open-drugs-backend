@@ -3,7 +3,7 @@ from typing import List
 from fastapi import APIRouter, HTTPException
 
 from config import Language
-from handlers.experimets import search, get
+from handlers.experimets import search, get, plot
 from presenters.experiment import Experiment
 
 router = APIRouter()
@@ -25,4 +25,13 @@ async def get_experiment(
     exp = get.handler_get_exp(lang, idx)
     exp["id"] = idx
     return exp
+
+@router.get(f'/{base_route}/{{idx}}/plot')
+async def get_experiment_plot(
+        lang: Language = Language.en,
+        idx: int = None):
+    if idx is None:
+        raise HTTPException( status_code=404, detail='missing idx arg',)
+    pl = plot.handler_plot_exp(lang, idx)
+    return pl
 
