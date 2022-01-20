@@ -19,15 +19,32 @@ services:
   api:
     user: ${LISTCONTROLS_UID}
     build:
-      context: .
+      context: api/
       dockerfile: Dockerfile
     image: listcontrols-backend-dev
     hostname: listcontrols-api
     container_name: listcontrols-api-dev
     volumes:
       - "./api:/api"
-      - "./.env:/.env"
-      - "./requirements.txt:/requirements.txt"
+      - "./api/.env:/.env"
+      - "./api/requirements.txt:/requirements.txt"
+    depends_on:
+      - postgres
+    networks:
+      - postgres_net
+
+  cms:
+    user: ${LISTCONTROLS_UID}
+    build:
+      context: cms/
+      dockerfile: Dockerfile
+    image: listcontrols-cms-dev
+    hostname: listcontrols-cms
+    container_name: listcontrols--cms-dev
+    volumes:
+      - "./cms:/cms"
+      - "./cms/.env:/.env"
+      - "./cms/requirements.txt:/requirements.txt"
     depends_on:
       - postgres
     networks:
