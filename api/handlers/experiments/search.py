@@ -1,10 +1,28 @@
 from config import Language
 from presenters.experiment import Experiment
+from entities.intervention_type import InterventionType
 
 
 def handler_get_exp_list(
         lang: Language = Language.en,
-        page: int = None, pageSize: int = None):
+        page: int = None, pageSize: int = None,
+        interventionType: InterventionType = None,
+        intervention: int = None,
+        species: int = None,
+        strain: int = None,
+        maxLifespanChangePercentMin: float = None,
+        maxLifespanChangePercentMax: float = None,
+        avgLifespanChangePercentMin: float = None,
+        avgLifespanChangePercentMax: float = None,
+        avgLifespanMin: int = None,
+        avgLifespanMax: int = None,
+        avgLifespanUnit: str = 'days',
+        maxLifespanMin: int = None,
+        maxLifespanMax: int = None,
+        maxLifespanUnit: int = 'days',
+        year: int = None
+
+):
     return {
         "items": [
             {
