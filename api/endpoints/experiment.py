@@ -2,7 +2,7 @@ from typing import List, Optional
 
 from fastapi import APIRouter, HTTPException
 
-from config import Language
+from config import Language, Order, SortVariant
 from handlers.experiments import search, get, plot
 from presenters.experiment import Experiment
 from entities.intervention_type import InterventionType
@@ -15,23 +15,25 @@ base_route = 'experiment'
 async def get_experiments_list(
         lang: Language = Language.en,
         page: int = None, pageSize: int = None,
-        ##
-        interventionType: InterventionType = None,
-        intervention: int = None,
-        species: int = None,
-        strain: int = None,
-        maxLifespanChangePercentMin: float = None,
-        maxLifespanChangePercentMax: float = None,
-        avgLifespanChangePercentMin: float = None,
-        avgLifespanChangePercentMax: float = None,
-        avgLifespanMin: int = None,
-        avgLifespanMax: int = None,
-        avgLifespanUnit: str = 'days',
-        maxLifespanMin: int = None,
-        maxLifespanMax: int = None,
-        maxLifespanUnit: int = 'days',
-        year: int = None
-        ##
+        # filters
+        byInterventionType: InterventionType = None,
+        byIntervention: int = None,
+        bySpecies: int = None,
+        byStrain: int = None,
+        byMaxLifespanChangePercentMin: float = None,
+        byMaxLifespanChangePercentMax: float = None,
+        byAvgLifespanChangePercentMin: float = None,
+        byAvgLifespanChangePercentMax: float = None,
+        byAvgLifespanMin: int = None,
+        byAvgLifespanMax: int = None,
+        byAvgLifespanUnit: str = 'days',
+        byMaxLifespanMin: int = None,
+        byMaxLifespanMax: int = None,
+        byMaxLifespanUnit: int = 'days',
+        byYear: int = None,
+        # sort
+        sortBy: SortVariant = SortVariant.default,
+        sortOrder: Order = Order.desc,
 
 ):
     ls = search.handler_get_exp_list(lang, page, pageSize)
