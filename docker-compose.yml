@@ -1,42 +1,46 @@
 version: '3'
 
 services:
-  postgres:
+  postgres_mice_lifespan:
     image: postgres
-    user: ${LISTCONTROLS_UID}
+    user: ${MICE_LIFESPAN_UID}
     environment: # Set up postgres database name and password
       POSTGRES_PASSWORD: 1234
-      POSTGRES_DB: open_drugs
+      POSTGRES_DB: mice_lifespan
       POSTGRES_USER: admin
     ports: # Set up ports exposed for other containers to connect to
-      - 5433:5432
+      - 5434:5432
     networks:
-      - postgres_net
+      - postgres_mice_lifespan_net
     volumes:
-      - ./../listcontrols-postgres:/var/lib/postgresql/data
+      - ./../mice_lifespan-postgres:/var/lib/postgresql/data
       - ./docker/postgres:/docker-entrypoint-initdb.d
 
   api:
-    user: ${LISTCONTROLS_UID}
+    user: ${MICE_LIFESPAN_UID}
     build:
       context: .
       dockerfile: Dockerfile
-    image: listcontrols-backend-dev
-    hostname: listcontrols-api
-    container_name: listcontrols-api-dev
+    image: mice_lifespan-backend-dev
+    hostname: mice_lifespan-api
+    container_name: mice_lifespan-api-dev
+    ports: # Set up ports exposed for other containers to connect to
+      - 8088:8088
     volumes:
       - "./api:/api"
+      - "./parsers:/parsers"
       - "./.env:/.env"
       - "./requirements.txt:/requirements.txt"
     depends_on:
-      - postgres
+      - postgres_mice_lifespan
     networks:
-      - postgres_net
-
+      - postgres_mice_lifespan_net
+    expose:
+      - 8088
 networks:
-  postgres_net:
+  postgres_mice_lifespan_net:
     external:
-      name: postgres_net
+      name: postgres_mice_lifespan_net
   default:
     external: false
 

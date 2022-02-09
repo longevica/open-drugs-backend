@@ -9,7 +9,7 @@ migrate_down:
 
 build:
 	export DOCKER_DEFAULT_PLATFORM=linux/amd64
-	./listcontrols-backend.sh build
+	./mice_lifespan-backend.sh build
 
 run:
-	./listcontrols-backend.sh run api
+	./mice_lifespan-backend.sh run api

@@ -12,8 +12,8 @@ then
 	COMPOSE_ARGS="up -d"
 fi
 
-mkdir -p ../listcontrols-logs
-mkdir -p ../listcontrols-postgres
+mkdir -p ../mice_lifespan-logs
+mkdir -p ../mice_lifespan-postgres
 
 if [ ! -e .env ]
 then
@@ -23,8 +23,8 @@ fi
 
 [ -f VERSION ] || touch VERSION
 
-LISTCONTROLS_UID=$uid:$gid
-export LISTCONTROLS_UID
+MICE_LIFESPAN_UID=$uid:$gid
+export MICE_LIFESPAN_UID
 
-docker network create postgres_net || true
+docker network create postgres_mice_lifespan_net || true
 docker-compose $COMPOSE_ARGS

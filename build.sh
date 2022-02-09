@@ -2,7 +2,7 @@
 TAG=$1
 IMAGE=$TAG
 [ "$IMAGE" = "" ] || IMAGE=":$IMAGE"
-IMAGE="opendrugs/backend$IMAGE"
+IMAGE="mice_lifespan/backend$IMAGE"
 
 BUILD=`git log HEAD --pretty=oneline --relative .| wc -l`
 REVISION=`git rev-parse --short HEAD`
