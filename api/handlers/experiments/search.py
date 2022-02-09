@@ -1,10 +1,33 @@
-from config import Language
+from config import Language, SortVariant, Order
 from presenters.experiment import Experiment
+from entities.intervention_type import InterventionType
 
 
 def handler_get_exp_list(
         lang: Language = Language.en,
-        page: int = None, pageSize: int = None):
+        page: int = None,
+        pageSize: int = None,
+        # filters
+        byInterventionType: InterventionType = None,
+        byIntervention: int = None,
+        bySpecies: int = None,
+        byStrain: int = None,
+        byMaxLifespanChangePercentMin: float = None,
+        byMaxLifespanChangePercentMax: float = None,
+        byAvgLifespanChangePercentMin: float = None,
+        byAvgLifespanChangePercentMax: float = None,
+        byAvgLifespanMin: int = None,
+        byAvgLifespanMax: int = None,
+        byAvgLifespanUnit: str = 'days',
+        byMaxLifespanMin: int = None,
+        byMaxLifespanMax: int = None,
+        byMaxLifespanUnit: int = 'days',
+        byYear: int = None,
+        # sort
+        sortBy: SortVariant = SortVariant.default,
+        sortOrder: Order = Order.desc,
+
+):
     return {
         "items": [
             {
@@ -71,13 +94,13 @@ def handler_get_exp_list(
                 }
             },
             {
-                "id": 123,
+                "id": 124,
                 "species": {
-                    "id": 123,
+                    "id": 124,
                     "name": "mus musculus"
                 },
                 "strain": {
-                    "id": 123,
+                    "id": 124,
                     "name": "UM-HET3"
                 },
                 "sex": "female",

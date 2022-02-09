@@ -1,5 +1,5 @@
 from config import CONFIG
-from entities import entities
+from entities.experiment import Experiment
 
 import psycopg2
 
@@ -16,9 +16,7 @@ class BaseDAO:
             subprocess.run(args)
 
             # conn
-            self.connection = psycopg2.connect(connstr
-                # host=host, port=port, user=user, password=password, database=database,
-            )
+            self.connection = psycopg2.connect(connstr)
             cursor = self.connection.cursor()
             cursor.execute("SELECT version();")
             record = cursor.fetchone()
@@ -37,16 +35,16 @@ class ExperimentDAO(BaseDAO):
         cur.execute(request)
         return cur.fetchall()
 
-    def get(self, id: int = None) -> entities.Experiment:
+    def get(self, id: int = None) -> Experiment:
         cur = self.cnx.cursor(dictionary=True)
         cur.execute(
-            "SELECT * FROM `experiment` WHERE id= %(id)s;",
+            "SELECT * FROM experiment WHERE id= %(id)s;",
             {'id': id},
         )
         result = cur.fetchone()
         return result
 
-    def add(self, experiment: entities.Experiment) -> entities.Experiment:
+    def add(self, experiment: Experiment) -> Experiment:
         '''
         :param experiment:
         :return:
@@ -71,7 +69,7 @@ class ExperimentDAO(BaseDAO):
 
         return result
 
-    def update(self, experiment: entities.Experiment, ) -> entities.Experiment:
+    def update(self, experiment: Experiment, ) -> Experiment:
         experiment_dict = experiment.dict(exclude_none=True)
         prep_str = [f"`{k}` = %({k})s" for k in experiment_dict.keys()]
 
