@@ -1,6 +1,7 @@
 from config import Language, SortVariant, Order
 from presenters.experiment import Experiment
 from entities.intervention_type import InterventionType
+from db.dao import ExperimentDAO
 
 
 def handler_get_exp_list(
@@ -28,6 +29,7 @@ def handler_get_exp_list(
         sortOrder: Order = Order.desc,
 
 ):
+    return ExperimentDAO().get_list(locals())
     return {
         "items": [
             {

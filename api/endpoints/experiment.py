@@ -18,7 +18,6 @@ async def get_experiments_list(
         # filters
         byInterventionType: InterventionType = None,
         byIntervention: int = None,
-        bySpecies: int = None,
         byStrain: int = None,
         byMaxLifespanChangePercentMin: float = None,
         byMaxLifespanChangePercentMax: float = None,
@@ -36,7 +35,7 @@ async def get_experiments_list(
         sortOrder: Order = Order.desc,
 
 ):
-    ls = search.handler_get_exp_list(lang, page, pageSize)
+    ls = search.handler_get_exp_list(locals())
     return ls
 
 

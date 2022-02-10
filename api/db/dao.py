@@ -10,13 +10,13 @@ class BaseDAO:
     def __init__(self):
         if self.connection is None:
             # migrations
-            connstr = CONFIG['DB_CONN']
+            connection_config = CONFIG['DB_CONN']
             import subprocess
-            args = ["yoyo", "apply", "--database", connstr, "-b", "./db/migrations"]
+            args = ["yoyo", "apply", "--database", connection_config, "-b", "./db/migrations"]
             subprocess.run(args)
 
             # conn
-            self.connection = psycopg2.connect(connstr)
+            self.connection = psycopg2.connect(connection_config)
             cursor = self.connection.cursor()
             cursor.execute("SELECT version();")
             record = cursor.fetchone()
@@ -30,13 +30,25 @@ class ExperimentDAO(BaseDAO):
     """Experiment table fetcher."""
 
     def get_list(self, request):
-        cur = self.cnx.cursor(dictionary=True)
-        cur.execute('SET SESSION group_concat_max_len = 100000;')
-        cur.execute(request)
+        cur = self.connection.cursor()
+        query = """
+            select experiment.id, strain.id, strain.name, sex.name, 
+            treatment_group.max_lifespan, treatment_group.min_lifespan, treatment_group.median_lifespan, 
+            lifespan_unit.name, 
+            active_substance.name
+            from experiment
+            JOIN intervention ON intervention.experiment_id = experiment.id
+            JOIN treatment_group ON intervention.treatment_group_id = treatment_group.id
+            JOIN strain ON experiment.strain_id = strain.id
+            JOIN sex ON experiment.sex_id = sex.id
+            JOIN time_unit lifespan_unit ON treatment_group.lifespan_unit_id = lifespan_unit.id 
+            LEFT JOIN active_substance ON intervention.active_substance_id = active_substance.id 
+        """
+        cur.execute(query)
         return cur.fetchall()
 
     def get(self, id: int = None) -> Experiment:
-        cur = self.cnx.cursor(dictionary=True)
+        cur = self.connection.cursor()
         cur.execute(
             "SELECT * FROM experiment WHERE id= %(id)s;",
             {'id': id},
@@ -45,10 +57,10 @@ class ExperimentDAO(BaseDAO):
         return result
 
     def add(self, experiment: Experiment) -> Experiment:
-        '''
+        """
         :param experiment:
         :return:
-        '''
+        """
         experiment_dict = experiment.dict(exclude_none=True)
 
         # It's OK to use f-strings, because of Pydantic validation.
@@ -56,16 +68,16 @@ class ExperimentDAO(BaseDAO):
         subs = ', '.join([f'%({k})s' for k in experiment_dict.keys()])
         query += f"VALUES ({subs});"
 
-        cur = self.cnx.cursor(dictionary=True)
+        cur = self.connection.cursor(dictionary=True)
         cur.execute(query, experiment_dict)
-        self.cnx.commit()
+        self.connection.commit()
 
         cur.execute(
             "SELECT * FROM experiment WHERE ID=%(id)s;",
             {'id': cur.lastrowid},
         )
         result = cur.fetchone()
-        self.cnx.close()
+        self.connection.close()
 
         return result
 
@@ -79,9 +91,9 @@ class ExperimentDAO(BaseDAO):
             WHERE id={experiment_dict['id']};
         """
 
-        cur = self.cnx.cursor(dictionary=True)
+        cur = self.connection.cursor(dictionary=True)
         cur.execute(query, experiment_dict)
-        self.cnx.commit()
+        self.connection.commit()
         cur.close()
 
         return self.get(id=experiment_dict['id'])
